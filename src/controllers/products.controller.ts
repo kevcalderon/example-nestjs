@@ -11,9 +11,12 @@ import {
   Query,
   Res,
   Req,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ProductsService } from 'src/services/products.service';
+import { CreateProductoDto } from 'src/dtos/products.dto';
+import { UpdateProductoDto } from 'src/dtos/products.dto';
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
@@ -33,7 +36,8 @@ export class ProductsController {
   @Get(':id')
   //REGRESANDO UN CODIGO DE ESTADO PARA LLEVAR UN CONTROL
   @HttpCode(HttpStatus.ACCEPTED)
-  getProduct(@Param('id') params: any) {
+  //PARSEINTPIPE, ES UNA VALIDACION PARA SOLO RECIBE NUMEROS
+  getProduct(@Param('id', ParseIntPipe) params: number) {
     //Otra forma de pasar los parametros es variable.nombre que seria el parametro que se le esta pasando el valor.
     // return {
     //   message: `El id es: ${params.id}`,
@@ -46,12 +50,12 @@ export class ProductsController {
   }
 
   @Post()
-  create(@Body() payload: any) {
+  create(@Body() payload: CreateProductoDto) {
     return this.productsService.create(payload);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() payload: number) {
+  update(@Param('id') id: number, @Body() payload: UpdateProductoDto) {
     return this.productsService.update(id, payload);
   }
 
